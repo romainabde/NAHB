@@ -9,7 +9,7 @@ function generateToken(user) {
         id: user.id,
         username: user.username,
         email: user.email,
-        roles: user.roles.map(r => r.role)
+        roles: user.roles
     };
     return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 }
