@@ -1,8 +1,8 @@
 const StoryRepository = require("../repository/StoryRepository");
-const AppError = require ("../middlewares/AppError")
-const SafeUserDto = require("../dto/SafeUser")
+const pageService = require("./PageService")
+const AppError = require ("../middlewares/AppError");
 
-class AuthorService {
+class StoryService {
 
     async createStory (authorId, data) {
         if(!data || !data.title || !data.description){
@@ -23,7 +23,7 @@ class AuthorService {
             throw new AppError("Au moins un champ (titre, description, tags, statut) doit être fourni.", 400);
         }
 
-        const allowedFields = ["title", "description", "tags", "status"];
+        const allowedFields = ["title", "description", "tags", "status", "startPageId"];
         const updateData = {};
 
         // Vérifier chaque champ fourni
@@ -34,8 +34,18 @@ class AuthorService {
             updateData[field] = data[field];
         });
 
+        // Vérifier le statut
+        if (updateData.status !== undefined && !["DRAFT", "PUBLISHED", "SUSPENDED"].includes(updateData.status)){
+            throw new AppError("Le statut reçu est invalide (DRAFT, PUBLISHED, SUSPENDED).", 400);
+        }
+
+        // Vérifier si la page existe
+        if(updateData.startPageId !== undefined && Number.isInteger(updateData.startPageId)){
+            if(!await pageService.getPageById(updateData.startPageId)) throw new AppError("La page de départ n'existe pas.", 404);
+        }
+
         // Vérifier si l'histoire existe
-        const story= await StoryRepository.findById(storyId);
+        const story= await this.getStoryById(storyId);
         if(!story) throw new AppError("L'histoire recherchée n'existe pas.", 404);
 
         // Autorisation
@@ -49,7 +59,7 @@ class AuthorService {
     async deleteStory (authorId, storyId){
 
         // Vérifier si l'histoire existe
-        const story= await StoryRepository.findById(storyId);
+        const story = await this.getStoryById(storyId);
         if(!story) throw new AppError("L'histoire recherchée n'existe pas.", 404);
 
         // Autorisation
@@ -59,10 +69,16 @@ class AuthorService {
         return await StoryRepository.delete(storyId)
     }
 
+    // Vérifier si l'histoire appartient à l'utilisateur
     async isUserStory(userId, story){
         return story.authorId === userId;
     }
 
+    // Vérifier si une histoire existe
+    async getStoryById(storyId){
+        return await StoryRepository.findById(storyId);
+    }
+
 }
 
-module.exports = new AuthorService();
+module.exports = new StoryService();

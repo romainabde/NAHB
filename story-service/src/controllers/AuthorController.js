@@ -1,8 +1,9 @@
-const authorService = require('../services/AuthorService');
+const storyService = require('../services/StoryService');
+const pageService = require('../services/PageService')
 
 exports.createStory = async (req, res, next) => {
     try {
-        const response = await authorService.createStory(req.user.id, req.body)
+        const response = await storyService.createStory(req.user.id, req.body)
         return res.status(201).json(response)
     } catch (err) {
         next(err);
@@ -11,7 +12,7 @@ exports.createStory = async (req, res, next) => {
 
 exports.editStory = async (req, res, next) => {
     try {
-        const response = await authorService.editStory(req.user.id, Number(req.params.id), req.body)
+        const response = await storyService.editStory(req.user.id, Number(req.params.id), req.body)
         return res.status(200).json(response)
     } catch (err) {
         next(err);
@@ -20,7 +21,16 @@ exports.editStory = async (req, res, next) => {
 
 exports.deleteStory = async (req, res, next) => {
     try {
-        const response = await authorService.deleteStory(Number(req.params.id))
+        const response = await storyService.deleteStory(req.user.id, Number(req.params.id))
+        return res.status(200).json(response)
+    } catch (err) {
+        next(err);
+    }
+}
+
+exports.createPage = async (req, res, next) => {
+    try {
+        const response = await pageService.createPage(req.user.id, Number(req.params.id), req.body)
         return res.status(200).json(response)
     } catch (err) {
         next(err);
