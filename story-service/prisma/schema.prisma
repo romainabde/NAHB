@@ -57,11 +57,11 @@ model Choice {
 
   // Page d'origine
   fromPageId Int
-  fromPage   Page   @relation("ChoicesFrom", fields: [fromPageId], references: [id])
+  fromPage   Page   @relation("ChoicesFrom", fields: [fromPageId], references: [id], onDelete: Cascade)
 
   // Page ciblée
   toPageId   Int
-  toPage     Page   @relation("ChoicesTo", fields: [toPageId], references: [id])
+  toPage     Page   @relation("ChoicesTo", fields: [toPageId], references: [id], onDelete: Cascade)
 }
 
 enum StoryStatus {
