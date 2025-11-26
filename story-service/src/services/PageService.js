@@ -6,7 +6,11 @@ class PageService {
 
     // Retrouver la page par son id
     async getPageById(pageId){
-        return await PageRepository.findById(pageId);
+        const page = await PageRepository.findById(pageId);
+
+        if (!page) throw new AppError("Page non trouvée.", 404);
+
+        return page;
     }
 
     // Créer une page
@@ -33,7 +37,6 @@ class PageService {
         if(!data) throw new AppError("Le contenu de la page ou 'isEnding' est obligatoire.", 400)
 
         const page = await this.getPageById(pageId);
-        if (!page) throw new AppError("Page non trouvée.", 404);
 
         // Vérifier que l'auteur est bien le propriétaire de l'histoire
         const story = await StoryRepository.findById(page.storyId);
@@ -53,8 +56,7 @@ class PageService {
 
     // Supprimer une page
     async deletePage(userId, pageId) {
-        const page = await PageRepository.findById(pageId);
-        if (!page) throw new AppError("Page non trouvée.", 404);
+        const page = await this.getPageById(pageId);
 
         const story = await StoryRepository.findById(page.storyId);
         if (story.authorId !== userId) {
@@ -62,6 +64,28 @@ class PageService {
         }
 
         return await PageRepository.delete(pageId);
+    }
+
+    // Récupérer la première page d'une histoire
+    async getFirstStoryPage(storyId) {
+        const story = await StoryRepository.findById(storyId);
+        if (!story) {
+            throw new AppError("Histoire non trouvée.", 404);
+        }
+        if (!story.startPageId) {
+            throw new AppError("Cette histoire n'a pas de page de départ assignée.", 404);
+        }
+        return await this.getPageById(story.startPageId);
+    }
+
+    // Récupérer toutes les pages d'une histoire
+    async getStoryPages(storyId) {
+        const story = await StoryRepository.findById(storyId);
+        if (!story) {
+            throw new AppError("Histoire non trouvée.", 404);
+        }
+
+        return PageRepository.findByStory(storyId);
     }
 
 }

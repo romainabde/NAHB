@@ -63,6 +63,57 @@ class ChoiceService {
 
         return await ChoiceRepository.delete(choiceId);
     }
+
+    // Récupérer les choix d'une page
+    async getPageChoices(pageId) {
+        const page = await PageRepository.findById(pageId);
+        if (!page) {
+            throw new AppError("Page introuvable.", 404);
+        }
+
+        const choice = await ChoiceRepository.findByFromPage(pageId);
+        if(!choice){
+            throw new AppError("Cette page ne comporte aucun choix.", 404);
+        }
+
+        return choice;
+    }
+
+    // Récupérer tous les choix d'une histoire
+    async getStoryChoices(storyId) {
+        if (!Number.isInteger(storyId)) {
+            throw new AppError("L'ID d'histoire doit être un entier.", 400);
+        }
+
+        const story = await StoryRepository.findById(storyId);
+        if (!story) {
+            throw new AppError("Histoire introuvable.", 404);
+        }
+
+        // Récupérer toutes les pages de l'histoire
+        const pages = await PageRepository.findByStory(storyId);
+        const pageIds = pages.map(p => p.id);
+
+        // Tous les choix dont fromPageId appartient aux pages de l’histoire
+        const choices = [];
+        for (const pageId of pageIds) {
+            const pageChoices = await ChoiceRepository.findByFromPage(pageId);
+            choices.push(...pageChoices);
+        }
+
+        return choices;
+    }
+
+    // Récupérer un choix par son ID
+    async getChoice(choiceId) {
+        const choice = await ChoiceRepository.findById(choiceId);
+        if (!choice) {
+            throw new AppError("Choix introuvable.", 404);
+        }
+
+        return choice;
+    }
+
 }
 
 module.exports = new ChoiceService();

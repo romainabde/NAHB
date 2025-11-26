@@ -4,6 +4,17 @@ const SafeUserDto = require("../dto/SafeUser")
 
 class UserService {
 
+    async getUserList(){
+        const users = await UserRepository.findAll();
+        const list = [];
+
+        for (const user of users || []) {
+            list.push(new SafeUserDto(user));
+        }
+
+        return list;
+    }
+
     async banUser(userId) {
 
         let user = await UserRepository.findById(userId);

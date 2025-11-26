@@ -17,11 +17,11 @@ class PageRepository {
     async findById(pageId) {
         return prisma.page.findUnique({
             where: { id: pageId },
-            include: {
+            /*include: {
                 choicesFrom: true,
                 choicesTo: true,
                 story: true
-            }
+            }*/
         });
     }
 

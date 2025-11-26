@@ -16,24 +16,24 @@ class ChoiceRepository {
     async findById(choiceId) {
         return prisma.choice.findUnique({
             where: { id: choiceId },
-            include: {
+            /*include: {
                 fromPage: true,
                 toPage: true
-            }
+            }*/
         });
     }
 
     async findByFromPage(fromPageId) {
         return prisma.choice.findMany({
             where: { fromPageId },
-            include: { toPage: true }
+            //include: { toPage: true }
         });
     }
 
     async findByToPage(toPageId) {
         return prisma.choice.findMany({
             where: { toPageId },
-            include: { fromPage: true }
+            //include: { fromPage: true }
         });
     }
 

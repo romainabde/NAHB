@@ -41,6 +41,10 @@ class UserRepository {
         });
     }
 
+    async findAll(){
+        return prisma.user.findMany({include: {roles: true}});
+    }
+
     // UPDATE
 
     async removeAuthorRole(userId) {

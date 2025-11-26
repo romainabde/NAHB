@@ -79,6 +79,24 @@ class StoryService {
         return await StoryRepository.findById(storyId);
     }
 
+    // Récupérer toutes les stories d'un utilisateur
+    async getUserStories(userId) {
+        const stories = await StoryRepository.findByAuthor(userId);
+        if (!stories || stories.length === 0) {
+            throw new AppError("Aucune histoire trouvée pour cet utilisateur.", 404);
+        }
+        return stories;
+    }
+
+    // Récupérer une story par son ID
+    async getStory(storyId) {
+        const story = await StoryRepository.findById(parseInt(storyId));
+        if (!story) {
+            throw new AppError("Histoire non trouvée.", 404);
+        }
+        return story;
+    }
+
 }
 
 module.exports = new StoryService();
