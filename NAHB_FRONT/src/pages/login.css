@@ -1,0 +1,65 @@
+/* Container centré */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f5f5f5;
+}
+
+/* Formulaire */
+.login-form {
+  background-color: #fff;
+  padding: 30px 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  width: 350px;
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+/* Titre */
+.login-form h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Champs input */
+.login-form input {
+  width: 100%;
+  padding: 12px 15px;
+  margin: 10px 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+/* Bouton */
+.login-form button {
+  width: 100%;
+  padding: 12px;
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background-color 0.3s ease;
+}
+
+.login-form button:hover {
+  background-color: #45a049;
+}
+
+/* Message succès / erreur */
+.login-message {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #4caf50; /* vert par défaut pour succès */
+}
+
+.login-message.error {
+  color: #e53935; /* rouge pour erreur */
+}
