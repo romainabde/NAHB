@@ -15,6 +15,7 @@ model Story {
   title       String
   description String
   tags        String?
+  theme       String?
   status      StoryStatus @default(DRAFT)
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt

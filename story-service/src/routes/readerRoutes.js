@@ -3,6 +3,7 @@ const readerController = require('../controllers/ReaderController');
 const router = express.Router();
 
 router.get('/', readerController.getUserStories);
+router.get('/all', readerController.getStoryList);
 router.get('/:id', readerController.getStory);
 
 router.get('/:id/pages/first', readerController.getFirstStoryPage);

@@ -97,6 +97,18 @@ class StoryService {
         return story;
     }
 
+    async getStories(query) {
+        const { theme } = query;
+
+        const filters = {};
+
+        if (theme) {
+            filters.theme = theme;
+        }
+
+        return StoryRepository.findStories(filters);
+    }
+
 }
 
 module.exports = new StoryService();

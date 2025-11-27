@@ -41,6 +41,13 @@ class StoryRepository {
         });
     }
 
+    async findStories(filters) {
+        return prisma.story.findMany({
+            where: filters,
+            orderBy: { createdAt: 'desc' }
+        });
+    }
+
     // UPDATE
 
     async update(storyId, data) {

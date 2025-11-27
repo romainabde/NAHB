@@ -11,6 +11,15 @@ exports.getUserStories = async (req, res, next) => {
     }
 };
 
+exports.getStoryList = async (req, res, next) => {
+    try {
+        const stories = await storyService.getStories(req.query);
+        return res.status(200).json(stories);
+    } catch (err) {
+        next(err);
+    }
+};
+
 exports.getStory = async (req, res, next) => {
     try {
         const story = await storyService.getStory(req.params.id);
