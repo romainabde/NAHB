@@ -57,6 +57,17 @@ class UserRepository {
 
         return await this.findById(userId)
     }
+
+    async addReaderRole(userId) {
+        await prisma.userRole.create({
+            data: {
+                userId,
+                role: "READER"
+            }
+        });
+
+        return await this.findById(userId)
+    }
 }
 
 module.exports = new UserRepository();

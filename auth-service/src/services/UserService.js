@@ -27,6 +27,10 @@ class UserService {
             throw new AppError("L'utilisateur n'est pas un auteur.", 400);
         }
 
+        if(user.roles.length === 1){
+            user = await UserRepository.addReaderRole(userId);
+        }
+
         user = await UserRepository.removeAuthorRole(userId);
 
         return new SafeUserDto(user);
