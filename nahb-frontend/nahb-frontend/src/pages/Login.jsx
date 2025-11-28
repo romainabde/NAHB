@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import { loginRequest } from "../services/authApi";
 import { AuthContext } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import "./Style/Login.css";
 
 export default function Login() {
     const { login } = useContext(AuthContext);
@@ -17,25 +18,21 @@ export default function Login() {
 
         try {
             const res = await loginRequest(email, password);
-
-            // backend renvoie { user, token }
             login(res.token);
-
-            navigate("/"); // redirection
+            navigate("/");
         } catch (err) {
             setError("Email ou mot de passe incorrect");
         }
     };
 
     return (
-        <div style={{ maxWidth: "400px", margin: "60px auto" }}>
-            <h2>Connexion</h2>
+        <div className="login-container">
+            <h2 className="login-title">Connexion</h2>
 
-            {error && <p style={{ color: "red" }}>{error}</p>}
+            {error && <p className="login-error">{error}</p>}
 
-            <form onSubmit={handleSubmit}>
-
-                <div>
+            <form onSubmit={handleSubmit} className="login-form">
+                <div className="login-field">
                     <label>Email :</label>
                     <input
                         type="email"
@@ -45,7 +42,7 @@ export default function Login() {
                     />
                 </div>
 
-                <div>
+                <div className="login-field">
                     <label>Mot de passe :</label>
                     <input
                         type="password"
@@ -55,7 +52,7 @@ export default function Login() {
                     />
                 </div>
 
-                <button type="submit">Se connecter</button>
+                <button type="submit" className="login-btn">Se connecter</button>
             </form>
         </div>
     );

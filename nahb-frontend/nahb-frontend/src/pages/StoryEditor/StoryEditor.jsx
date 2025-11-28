@@ -2,7 +2,8 @@ import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
 import apiClient from "../../services/apiClient";
-    
+import "./StoryEditor.css";
+
 export default function StoryEditor() {
     const { user } = useContext(AuthContext);
     const navigate = useNavigate();
@@ -31,25 +32,19 @@ export default function StoryEditor() {
         setLoading(true);
 
         try {
-            const res = await apiClient.post(
-                "http://localhost:4002/author/stories",
-                {
-                    title,
-                    description,
-                    tags: tags || undefined
-                }
-            );
+            const res = await apiClient.post("http://localhost:4002/author/stories", {
+                title,
+                description,
+                tags: tags || undefined
+            });
 
             setSuccessMsg(`Histoire créée ! ID = ${res.data.id}`);
             setTitle("");
             setDescription("");
             setTags("");
 
-            // Redirection vers la création de la première page
             navigate(`/author/story/${res.data.id}/pages/new`);
-
         } catch (err) {
-            console.error(err);
             const message = err.response?.data?.error || "Erreur lors de la création de l'histoire.";
             setErrorMsg(message);
         } finally {
@@ -58,50 +53,45 @@ export default function StoryEditor() {
     };
 
     return (
-        <div style={{ maxWidth: "600px", margin: "50px auto" }}>
-            <h2>Créer une nouvelle histoire</h2>
+        <div className="editor-container">
+            <h2 className="editor-title">Créer une nouvelle histoire</h2>
 
-            {errorMsg && <p style={{ color: "red" }}>{errorMsg}</p>}
-            {successMsg && <p style={{ color: "green" }}>{successMsg}</p>}
+            {errorMsg && <p className="editor-error">{errorMsg}</p>}
+            {successMsg && <p className="editor-success">{successMsg}</p>}
 
-            <form onSubmit={handleSubmit}>
-
-                <div style={{ marginBottom: "15px" }}>
-                    <label>Titre :</label><br/>
+            <form onSubmit={handleSubmit} className="editor-form">
+                <div className="editor-field">
+                    <label>Titre :</label>
                     <input
                         type="text"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                         required
-                        style={{ width: "100%", padding: "8px" }}
+                        className="editor-input"
                     />
                 </div>
 
-                <div style={{ marginBottom: "15px" }}>
-                    <label>Description :</label><br/>
+                <div className="editor-field">
+                    <label>Description :</label>
                     <textarea
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         required
-                        style={{ width: "100%", padding: "8px", minHeight: "80px" }}
+                        className="editor-textarea"
                     />
                 </div>
 
-                <div style={{ marginBottom: "15px" }}>
-                    <label>Tags (optionnel) :</label><br/>
+                <div className="editor-field">
+                    <label>Tags (optionnel) :</label>
                     <input
                         type="text"
                         value={tags}
                         onChange={(e) => setTags(e.target.value)}
-                        style={{ width: "100%", padding: "8px" }}
+                        className="editor-input"
                     />
                 </div>
 
-                <button
-                    type="submit"
-                    disabled={loading}
-                    style={{ padding: "10px 20px", fontSize: "16px", cursor: "pointer" }}
-                >
+                <button type="submit" className="editor-btn" disabled={loading}>
                     {loading ? "Création..." : "Créer l'histoire"}
                 </button>
             </form>

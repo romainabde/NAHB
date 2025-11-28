@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import apiClient from "../services/apiClient";
 import { useNavigate } from "react-router-dom";
+import "./Style/AdminDashboard.css";
 
 export default function AdminDashboard() {
     const navigate = useNavigate();
@@ -15,7 +16,6 @@ export default function AdminDashboard() {
     const [errorUsers, setErrorUsers] = useState("");
     const [errorStories, setErrorStories] = useState("");
 
-    // --- STATS ---
     useEffect(() => {
         const fetchPlays = async () => {
             setLoadingPlays(true);
@@ -32,7 +32,6 @@ export default function AdminDashboard() {
         fetchPlays();
     }, []);
 
-    // --- USERS ---
     useEffect(() => {
         const fetchUsers = async () => {
             setLoadingUsers(true);
@@ -49,7 +48,6 @@ export default function AdminDashboard() {
         fetchUsers();
     }, []);
 
-    // --- STORIES ---
     useEffect(() => {
         const fetchStories = async () => {
             setLoadingStories(true);
@@ -72,10 +70,8 @@ export default function AdminDashboard() {
         try {
             const res = await apiClient.patch(`http://localhost:4001/user/${userId}/ban`);
             const updatedUser = res.data;
-            setUsers((prev) =>
-                prev.map(u => (u.id === updatedUser.id ? updatedUser : u))
-            );
-            alert(`Utilisateur ${updatedUser.username} a été banni (rôle auteur supprimé).`);
+            setUsers(prev => prev.map(u => (u.id === updatedUser.id ? updatedUser : u)));
+            alert(`Utilisateur ${updatedUser.username} a été banni.`);
         } catch (err) {
             alert(err.response?.data?.error || "Erreur lors du bannissement.");
         }
@@ -89,9 +85,7 @@ export default function AdminDashboard() {
                 status: "SUSPENDED"
             });
             const updatedStory = res.data;
-            setStories((prev) =>
-                prev.map(s => (s.id === updatedStory.id ? updatedStory : s))
-            );
+            setStories(prev => prev.map(s => (s.id === updatedStory.id ? updatedStory : s)));
             alert(`Histoire "${updatedStory.title}" suspendue.`);
         } catch (err) {
             alert(err.response?.data?.error || "Erreur lors de la suspension de l'histoire.");
@@ -99,73 +93,42 @@ export default function AdminDashboard() {
     };
 
     return (
-        <div style={{ maxWidth: "900px", margin: "50px auto", textAlign: "center" }}>
-            <h1>Admin Dashboard</h1>
+        <div className="admin-container">
+            <h1 className="admin-title">Admin Dashboard</h1>
+            <button className="admin-btn" onClick={() => navigate("/")}>Retour à l'accueil</button>
 
-            <button
-                onClick={() => navigate("/")}
-                style={{
-                    padding: "8px 16px",
-                    marginTop: "10px",
-                    fontSize: "14px",
-                    cursor: "pointer",
-                    backgroundColor: "#1976d2",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "4px"
-                }}
-            >
-                Retour à l'accueil
-            </button>
-
-            {/* --- STATS --- */}
-            <div style={{ marginTop: "30px", textAlign: "left" }}>
+            <section className="admin-section">
                 <h2>Statistiques</h2>
                 {loadingPlays && <p>Chargement...</p>}
-                {errorPlays && <p style={{ color: "red" }}>{errorPlays}</p>}
-                {!loadingPlays && !errorPlays && (
-                    <p>Total de parties jouées : <strong>{plays.length}</strong></p>
-                )}
-            </div>
+                {errorPlays && <p className="admin-error">{errorPlays}</p>}
+                {!loadingPlays && !errorPlays && <p>Total de parties jouées : <strong>{plays.length}</strong></p>}
+            </section>
 
-            {/* --- USERS --- */}
-            <div style={{ marginTop: "50px", textAlign: "left" }}>
+            <section className="admin-section">
                 <h2>Gérer les utilisateurs (Bannir)</h2>
                 {loadingUsers && <p>Chargement...</p>}
-                {errorUsers && <p style={{ color: "red" }}>{errorUsers}</p>}
+                {errorUsers && <p className="admin-error">{errorUsers}</p>}
                 {!loadingUsers && !errorUsers && (
-                    <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                    <table className="admin-table">
                         <thead>
-                        <tr style={{ borderBottom: "2px solid #000" }}>
-                            <th style={{ textAlign: "left", padding: "8px" }}>ID</th>
-                            <th style={{ textAlign: "left", padding: "8px" }}>Username</th>
-                            <th style={{ textAlign: "left", padding: "8px" }}>Email</th>
-                            <th style={{ textAlign: "left", padding: "8px" }}>Rôles</th>
-                            <th style={{ padding: "8px" }}>Action</th>
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Rôles</th>
+                            <th>Action</th>
                         </tr>
                         </thead>
                         <tbody>
                         {users.map(u => (
-                            <tr key={u.id} style={{ borderBottom: "1px solid #ccc" }}>
-                                <td style={{ padding: "8px" }}>{u.id}</td>
-                                <td style={{ padding: "8px" }}>{u.username}</td>
-                                <td style={{ padding: "8px" }}>{u.email}</td>
-                                <td style={{ padding: "8px" }}>{u.roles.join(", ")}</td>
-                                <td style={{ textAlign: "center", padding: "8px" }}>
+                            <tr key={u.id}>
+                                <td>{u.id}</td>
+                                <td>{u.username}</td>
+                                <td>{u.email}</td>
+                                <td>{u.roles.join(", ")}</td>
+                                <td>
                                     {u.roles.includes("AUTHOR") && (
-                                        <button
-                                            onClick={() => banUser(u.id)}
-                                            style={{
-                                                color: "white",
-                                                backgroundColor: "#f44336",
-                                                border: "none",
-                                                padding: "5px 10px",
-                                                cursor: "pointer",
-                                                borderRadius: "4px"
-                                            }}
-                                        >
-                                            ✖
-                                        </button>
+                                        <button className="admin-btn-danger" onClick={() => banUser(u.id)}>✖</button>
                                     )}
                                 </td>
                             </tr>
@@ -173,44 +136,31 @@ export default function AdminDashboard() {
                         </tbody>
                     </table>
                 )}
-            </div>
+            </section>
 
-            {/* --- SUSPENDRE HISTOIRES --- */}
-            <div style={{ marginTop: "50px", textAlign: "left" }}>
+            <section className="admin-section">
                 <h2>Suspendre des histoires</h2>
                 {loadingStories && <p>Chargement...</p>}
-                {errorStories && <p style={{ color: "red" }}>{errorStories}</p>}
+                {errorStories && <p className="admin-error">{errorStories}</p>}
                 {!loadingStories && !errorStories && (
-                    <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                    <table className="admin-table">
                         <thead>
-                        <tr style={{ borderBottom: "2px solid #000" }}>
-                            <th style={{ textAlign: "left", padding: "8px" }}>ID</th>
-                            <th style={{ textAlign: "left", padding: "8px" }}>Titre</th>
-                            <th style={{ textAlign: "left", padding: "8px" }}>Statut</th>
-                            <th style={{ padding: "8px" }}>Action</th>
+                        <tr>
+                            <th>ID</th>
+                            <th>Titre</th>
+                            <th>Statut</th>
+                            <th>Action</th>
                         </tr>
                         </thead>
                         <tbody>
                         {stories.map(s => (
-                            <tr key={s.id} style={{ borderBottom: "1px solid #ccc" }}>
-                                <td style={{ padding: "8px" }}>{s.id}</td>
-                                <td style={{ padding: "8px" }}>{s.title}</td>
-                                <td style={{ padding: "8px" }}>{s.status}</td>
-                                <td style={{ textAlign: "center", padding: "8px" }}>
+                            <tr key={s.id}>
+                                <td>{s.id}</td>
+                                <td>{s.title}</td>
+                                <td>{s.status}</td>
+                                <td>
                                     {s.status !== "SUSPENDED" && (
-                                        <button
-                                            onClick={() => suspendStory(s.id)}
-                                            style={{
-                                                color: "white",
-                                                backgroundColor: "#ff9800",
-                                                border: "none",
-                                                padding: "5px 10px",
-                                                cursor: "pointer",
-                                                borderRadius: "4px"
-                                            }}
-                                        >
-                                            Suspendre
-                                        </button>
+                                        <button className="admin-btn-warning" onClick={() => suspendStory(s.id)}>Suspendre</button>
                                     )}
                                 </td>
                             </tr>
@@ -218,7 +168,7 @@ export default function AdminDashboard() {
                         </tbody>
                     </table>
                 )}
-            </div>
+            </section>
         </div>
     );
 }

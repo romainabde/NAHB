@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import apiClient from "../services/apiClient";
+import "./Style/Register.css";
 
 export default function Register() {
     const navigate = useNavigate();
@@ -14,11 +15,8 @@ export default function Register() {
     const [loading, setLoading] = useState(false);
 
     const handleRoleChange = (role) => {
-        if (roles.includes(role)) {
-            setRoles(roles.filter(r => r !== role));
-        } else {
-            setRoles([...roles, role]);
-        }
+        if (roles.includes(role)) setRoles(roles.filter(r => r !== role));
+        else setRoles([...roles, role]);
     };
 
     const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
@@ -51,12 +49,8 @@ export default function Register() {
         setLoading(true);
         try {
             await apiClient.post("http://localhost:4001/auth/register", {
-                username,
-                email,
-                password,
-                roles
+                username, email, password, roles
             });
-            // Redirection vers login
             navigate("/login");
         } catch (err) {
             setError(err.response?.data?.error || "Erreur lors de l'inscription.");
@@ -66,41 +60,42 @@ export default function Register() {
     };
 
     return (
-        <div style={{ maxWidth: "400px", margin: "50px auto", textAlign: "center" }}>
-            <h1>Inscription</h1>
-            {error && <p style={{ color: "red" }}>{error}</p>}
+        <div className="register-container">
+            <h2 className="register-title">Inscription</h2>
 
-            <form onSubmit={handleSubmit}>
+            {error && <p className="register-error">{error}</p>}
+
+            <form onSubmit={handleSubmit} className="register-form">
                 <input
                     type="text"
                     placeholder="Nom d'utilisateur"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    style={{ width: "100%", padding: "8px", marginBottom: "10px" }}
+                    className="register-input"
                 />
                 <input
                     type="email"
                     placeholder="Email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    style={{ width: "100%", padding: "8px", marginBottom: "10px" }}
+                    className="register-input"
                 />
                 <input
                     type="password"
                     placeholder="Mot de passe"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    style={{ width: "100%", padding: "8px", marginBottom: "10px" }}
+                    className="register-input"
                 />
                 <input
                     type="password"
                     placeholder="Confirmer le mot de passe"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    style={{ width: "100%", padding: "8px", marginBottom: "10px" }}
+                    className="register-input"
                 />
 
-                <div style={{ textAlign: "left", marginBottom: "10px" }}>
+                <div className="register-roles">
                     <label>
                         <input
                             type="checkbox"
@@ -108,7 +103,7 @@ export default function Register() {
                             onChange={() => handleRoleChange("READER")}
                         /> Reader
                     </label>
-                    <label style={{ marginLeft: "15px" }}>
+                    <label>
                         <input
                             type="checkbox"
                             checked={roles.includes("AUTHOR")}
@@ -117,26 +112,13 @@ export default function Register() {
                     </label>
                 </div>
 
-                <button
-                    type="submit"
-                    disabled={loading}
-                    style={{
-                        width: "100%",
-                        padding: "10px",
-                        backgroundColor: "#1976d2",
-                        color: "white",
-                        fontSize: "16px",
-                        border: "none",
-                        borderRadius: "4px",
-                        cursor: "pointer"
-                    }}
-                >
+                <button type="submit" className="register-btn" disabled={loading}>
                     {loading ? "Inscription..." : "S'inscrire"}
                 </button>
             </form>
 
-            <p style={{ marginTop: "15px" }}>
-                Déjà un compte ? <span onClick={() => navigate("/login")} style={{ color: "#1976d2", cursor: "pointer" }}>Se connecter</span>
+            <p className="register-login-link">
+                Déjà un compte ? <span onClick={() => navigate("/login")}>Se connecter</span>
             </p>
         </div>
     );

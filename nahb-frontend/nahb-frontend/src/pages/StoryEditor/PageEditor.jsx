@@ -1,8 +1,9 @@
 import { useState, useEffect, useContext } from "react";
-import {useNavigate, useParams} from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
 import apiClient from "../../services/apiClient";
 import ChoiceEditor from "./ChoiceEditor.jsx";
+import "./PageEditor.css";
 
 export default function PageEditor() {
     const { user } = useContext(AuthContext);
@@ -40,14 +41,12 @@ export default function PageEditor() {
         setLoading(true);
 
         try {
-            // 1️⃣ Créer la page
             const pageRes = await apiClient.post(
                 `http://localhost:4002/author/stories/${storyId}/pages`,
                 { content, isEnding }
             );
             const pageId = pageRes.data.id;
 
-            // 2️⃣ Définir startPageId si première page
             if (pages.length === 0) {
                 await apiClient.patch(`http://localhost:4002/author/stories/${storyId}`, { startPageId: pageId });
             }
@@ -56,7 +55,7 @@ export default function PageEditor() {
             setContent("");
             setIsEnding(false);
             fetchPages();
-            setEditingPageId(pageId); // pour créer un choix
+            setEditingPageId(pageId);
         } catch (err) {
             const message = err.response?.data?.error || "Erreur lors de la création de la page.";
             setErrorMsg(message);
@@ -64,10 +63,6 @@ export default function PageEditor() {
             setLoading(false);
         }
     };
-
-    if (!user || !user.roles.some(r => r.role === "AUTHOR" || r === "AUTHOR")) {
-        return <p>Vous n’êtes pas autorisé à éditer cette histoire.</p>;
-    }
 
     const handlePublish = async () => {
         setErrorMsg("");
@@ -78,12 +73,7 @@ export default function PageEditor() {
                 status: "PUBLISHED"
             });
             setSuccessMsg("Histoire publiée avec succès ! Redirection dans 3 secondes...");
-
-            // Redirection après 3 secondes
-            setTimeout(() => {
-                navigate("/");
-            }, 3000);
-
+            setTimeout(() => navigate("/"), 3000);
         } catch (err) {
             const message = err.response?.data?.error || "Erreur lors de la publication.";
             setErrorMsg(message);
@@ -92,25 +82,28 @@ export default function PageEditor() {
         }
     };
 
+    if (!user || !user.roles.some(r => r.role === "AUTHOR" || r === "AUTHOR")) {
+        return <p>Vous n’êtes pas autorisé à éditer cette histoire.</p>;
+    }
 
     return (
-        <div style={{ maxWidth: "700px", margin: "50px auto" }}>
-            <h2>Ajouter une page pour l’histoire {storyId}</h2>
+        <div className="page-editor-container">
+            <h2 className="page-editor-title">Ajouter une page pour l’histoire {storyId}</h2>
 
-            {errorMsg && <p style={{ color: "red" }}>{errorMsg}</p>}
-            {successMsg && <p style={{ color: "green" }}>{successMsg}</p>}
+            {errorMsg && <p className="page-editor-error">{errorMsg}</p>}
+            {successMsg && <p className="page-editor-success">{successMsg}</p>}
 
-            <form onSubmit={handleSubmit}>
-                <div style={{ marginBottom: "10px" }}>
-                    <label>Contenu :</label><br/>
+            <form onSubmit={handleSubmit} className="page-editor-form">
+                <div className="page-editor-field">
+                    <label>Contenu :</label>
                     <textarea
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
-                        style={{ width: "100%", padding: "8px", minHeight: "80px" }}
+                        className="page-editor-textarea"
                     />
                 </div>
 
-                <div style={{ marginBottom: "10px" }}>
+                <div className="page-editor-field">
                     <label>
                         <input
                             type="checkbox"
@@ -120,15 +113,15 @@ export default function PageEditor() {
                     </label>
                 </div>
 
-                <button type="submit" disabled={loading}>
+                <button type="submit" className="page-editor-btn" disabled={loading}>
                     {loading ? "Création..." : "Ajouter la page"}
                 </button>
             </form>
 
-            <h3 style={{ marginTop: "30px" }}>Pages existantes</h3>
-            <ul>
+            <h3 className="page-editor-subtitle">Pages existantes</h3>
+            <ul className="page-editor-list">
                 {pages.map(p => (
-                    <li key={p.id}>
+                    <li key={p.id} className="page-editor-list-item">
                         {p.id}: {p.content.substring(0, 50)} {p.isEnding ? "(FIN)" : ""}
                     </li>
                 ))}
@@ -137,25 +130,12 @@ export default function PageEditor() {
             {editingPageId && (
                 <ChoiceEditor storyId={storyId} fromPageId={editingPageId} pages={pages} />
             )}
-            <div style={{ marginTop: "20px" }}>
-                <button
-                    onClick={handlePublish}
-                    disabled={loading}
-                    style={{
-                        padding: "10px 20px",
-                        fontSize: "16px",
-                        cursor: "pointer",
-                        backgroundColor: "#4CAF50",
-                        color: "white",
-                        border: "none",
-                        borderRadius: "4px"
-                    }}
-                >
+
+            <div className="page-editor-publish">
+                <button onClick={handlePublish} className="page-editor-publish-btn" disabled={loading}>
                     Publier l'histoire
                 </button>
             </div>
         </div>
-
-
     );
 }

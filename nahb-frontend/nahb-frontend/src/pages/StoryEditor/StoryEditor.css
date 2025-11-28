@@ -1,0 +1,78 @@
+.editor-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 30px;
+    border-radius: 10px;
+    background-color: #1e1e2f;
+    color: #fff;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    font-family: "Segoe UI", sans-serif;
+}
+
+.editor-title {
+    text-align: center;
+    font-size: 26px;
+    margin-bottom: 20px;
+    color: #00bcd4;
+}
+
+.editor-error {
+    color: #ff5252;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.editor-success {
+    color: #4caf50;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.editor-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.editor-field {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.editor-input,
+.editor-textarea {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #444;
+    background-color: #2c2c3f;
+    color: #fff;
+    font-size: 14px;
+}
+
+.editor-input:focus,
+.editor-textarea:focus {
+    outline: none;
+    border-color: #00bcd4;
+    box-shadow: 0 0 5px #00bcd4;
+}
+
+.editor-textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.editor-btn {
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    background-color: #00bcd4;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.editor-btn:hover {
+    background-color: #0097a7;
+}

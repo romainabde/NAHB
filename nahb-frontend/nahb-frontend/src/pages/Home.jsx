@@ -11,6 +11,7 @@ export default function Home() {
     const [loadingStories, setLoadingStories] = useState(false);
     const [errorStories, setErrorStories] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
+    const [themeFilter, setThemeFilter] = useState(""); // nouveau
 
     const filteredStories = publishedStories.filter(story =>
         story.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -21,7 +22,10 @@ export default function Home() {
             setLoadingStories(true);
             setErrorStories("");
             try {
-                const res = await apiClient.get("http://localhost:4002/reader/stories/all");
+                let url = "http://localhost:4002/reader/stories/all";
+                if (themeFilter) url += `?theme=${themeFilter}`;
+
+                const res = await apiClient.get(url);
                 const published = res.data.filter(story => story.status === "PUBLISHED");
                 setPublishedStories(published);
             } catch (err) {
@@ -32,7 +36,7 @@ export default function Home() {
             }
         };
         fetchPublishedStories();
-    }, []);
+    }, [themeFilter]); // 🔹 refait le fetch à chaque changement de thème
 
     const handleCreateStory = () => navigate("/author/story/new");
     const handleLogout = () => {
@@ -70,7 +74,8 @@ export default function Home() {
 
             <div className="stories-section">
                 <h2>Histoires publiées</h2>
-                <div className="search-container">
+
+                <div className="filters-container">
                     <input
                         type="text"
                         placeholder="Rechercher par titre..."
@@ -78,6 +83,17 @@ export default function Home() {
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="search-input"
                     />
+                    <select
+                        value={themeFilter}
+                        onChange={(e) => setThemeFilter(e.target.value)}
+                        className="theme-select"
+                    >
+                        <option value="">Tous les thèmes</option>
+                        <option value="aventure">Aventure</option>
+                        <option value="horreur">Horreur</option>
+                        <option value="fantasy">Fantasy</option>
+                        {/* Ajouter d'autres thèmes si besoin */}
+                    </select>
                 </div>
 
                 {loadingStories && <p className="loading-text">Chargement...</p>}
@@ -87,7 +103,7 @@ export default function Home() {
                 <ul className="story-list">
                     {filteredStories.map(story => (
                         <li key={story.id} className="story-item">
-                            <strong>{story.title}</strong> - {story.description}
+                            <strong>{story.title}</strong> - {story.description} <em>({story.theme})</em>
                             <button className="btn play-btn" onClick={() => navigate(`/story/${story.id}`)}>Jouer</button>
                         </li>
                     ))}
