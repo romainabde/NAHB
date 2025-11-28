@@ -1,0 +1,104 @@
+/* Container principal - largeur presque totale */
+.mystories-container {
+    max-width: 95%;
+    margin: 30px auto;
+    padding: 20px 30px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #333;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+}
+
+/* Titre de la page */
+.mystories-title {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Texte d'erreur ou chargement */
+.error-text, .loading-text {
+    color: #dc3545;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+/* Table des histoires */
+.story-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.story-table th, .story-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+.story-table th {
+    background-color: #f1f1f1;
+    font-weight: 600;
+}
+
+.story-table tr:hover {
+    background-color: #f8f8f8;
+}
+
+/* Boutons d'action */
+.action-btn {
+    padding: 6px 12px;
+    margin-right: 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    border: 1px solid #007bff;
+    background-color: #fff;
+    color: #007bff;
+    transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.delete-btn {
+    border: none;
+    background-color: #f44336;
+    color: #fff;
+    transition: all 0.2s ease;
+}
+
+.delete-btn:hover {
+    background-color: #d32f2f;
+}
+
+/* Message "aucune histoire" */
+.no-stories {
+    text-align: center;
+    padding: 15px;
+    font-style: italic;
+    color: #555;
+}
+
+.back-home-container {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.back-home-btn {
+    padding: 6px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.back-home-btn:hover {
+    background-color: #145a9e;
+}

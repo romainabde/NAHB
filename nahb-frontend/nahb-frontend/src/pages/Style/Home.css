@@ -1,0 +1,127 @@
+/* Container principal - quasi full width */
+.home-container {
+    max-width: 95%;       /* largeur quasi totale */
+    margin: 20px auto;
+    padding: 20px 30px;   /* un peu d'air sur les côtés */
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    border-radius: 8px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+}
+
+/* Title */
+.home-title {
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+/* Rôles */
+.roles-container {
+    margin-top: 15px;
+}
+.role-badge {
+    display: inline-block;
+    margin-right: 10px;
+    padding: 4px 10px;
+    background-color: #e0e0e0;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+/* Boutons */
+.author-buttons, .admin-button, .logout-button {
+    margin-top: 25px;
+}
+.btn {
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 15px;
+    cursor: pointer;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    transition: all 0.2s ease;
+}
+.btn:hover {
+    background-color: #f0f0f0;
+}
+.main-btn {
+    border-color: #007bff;
+    color: #007bff;
+}
+.main-btn:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+.admin-btn {
+    border-color: #28a745;
+    color: #28a745;
+}
+.admin-btn:hover {
+    background-color: #28a745;
+    color: #fff;
+}
+.logout-btn {
+    border-color: #dc3545;
+    color: #dc3545;
+}
+.logout-btn:hover {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+/* Section histoires */
+.stories-section {
+    margin-top: 40px;
+    text-align: left;
+}
+.search-container {
+    margin-bottom: 20px;
+}
+.search-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    outline: none;
+}
+
+/* Texte d'état */
+.loading-text, .error-text, .no-stories {
+    color: #555;
+    margin: 10px 0;
+}
+
+/* Liste histoires */
+.story-list {
+    list-style: none;
+    padding: 0;
+}
+.story-item {
+    padding: 15px;
+    margin-bottom: 12px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+.story-item:hover {
+    background-color: #f8f8f8;
+}
+.play-btn {
+    margin-top: 8px;
+    padding: 6px 12px;
+    font-size: 14px;
+    border: 1px solid #007bff;
+    border-radius: 6px;
+    background-color: #fff;
+    color: #007bff;
+    cursor: pointer;
+}
+.play-btn:hover {
+    background-color: #007bff;
+    color: #fff;
+}

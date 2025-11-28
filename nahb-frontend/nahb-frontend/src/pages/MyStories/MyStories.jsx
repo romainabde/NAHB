@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
 import apiClient from "../../services/apiClient";
+import "./MyStories.css";
 
 export default function MyStories() {
     const { user } = useContext(AuthContext);
@@ -29,10 +30,7 @@ export default function MyStories() {
         fetchStories();
     }, [user]);
 
-    const handleEdit = (id) => {
-        navigate(`/author/story/${id}/pages/new`);
-    };
-
+    const handleEdit = (id) => navigate(`/author/story/${id}/pages/new`);
     const handleDelete = async (id) => {
         if (!window.confirm("Voulez-vous vraiment supprimer cette histoire ?")) return;
         try {
@@ -45,45 +43,47 @@ export default function MyStories() {
     };
 
     if (!user || !user.roles.some(r => r.role === "AUTHOR" || r === "AUTHOR")) {
-        return <p>Vous n'êtes pas autorisé à accéder à cette page.</p>;
+        return <p className="error-text">Vous n'êtes pas autorisé à accéder à cette page.</p>;
     }
 
     return (
-        <div style={{ maxWidth: "800px", margin: "50px auto" }}>
-            <h2>Mes histoires</h2>
-            {errorMsg && <p style={{ color: "red" }}>{errorMsg}</p>}
-            {loading && <p>Chargement...</p>}
+        <div className="mystories-container">
+            {/* Bouton Retour à l'accueil */}
+            <div className="back-home-container">
+                <button className="back-home-btn" onClick={() => navigate("/")}>
+                    ← Retour à l'accueil
+                </button>
+            </div>
 
-            <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "20px" }}>
+            <h2 className="mystories-title">Mes histoires</h2>
+
+            {errorMsg && <p className="error-text">{errorMsg}</p>}
+            {loading && <p className="loading-text">Chargement...</p>}
+
+            <table className="story-table">
                 <thead>
                 <tr>
-                    <th style={{ border: "1px solid #ddd", padding: "8px" }}>ID</th>
-                    <th style={{ border: "1px solid #ddd", padding: "8px" }}>Titre</th>
-                    <th style={{ border: "1px solid #ddd", padding: "8px" }}>Description</th>
-                    <th style={{ border: "1px solid #ddd", padding: "8px" }}>Status</th>
-                    <th style={{ border: "1px solid #ddd", padding: "8px" }}>Créé le</th>
-                    <th style={{ border: "1px solid #ddd", padding: "8px" }}>Actions</th>
+                    <th>ID</th>
+                    <th>Titre</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Créé le</th>
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 {stories.map(story => (
                     <tr key={story.id}>
-                        <td style={{ border: "1px solid #ddd", padding: "8px" }}>{story.id}</td>
-                        <td style={{ border: "1px solid #ddd", padding: "8px" }}>{story.title}</td>
-                        <td style={{ border: "1px solid #ddd", padding: "8px" }}>{story.description}</td>
-                        <td style={{ border: "1px solid #ddd", padding: "8px" }}>{story.status}</td>
-                        <td style={{ border: "1px solid #ddd", padding: "8px" }}>{new Date(story.createdAt).toLocaleDateString()}</td>
-                        <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                            <button
-                                onClick={() => handleEdit(story.id)}
-                                style={{ marginRight: "10px", padding: "5px 10px", cursor: "pointer" }}
-                            >
+                        <td>{story.id}</td>
+                        <td>{story.title}</td>
+                        <td>{story.description}</td>
+                        <td>{story.status}</td>
+                        <td>{new Date(story.createdAt).toLocaleDateString()}</td>
+                        <td>
+                            <button className="action-btn" onClick={() => handleEdit(story.id)}>
                                 Éditer
                             </button>
-                            <button
-                                onClick={() => handleDelete(story.id)}
-                                style={{ padding: "5px 10px", cursor: "pointer", backgroundColor: "#f44336", color: "white", border: "none", borderRadius: "3px" }}
-                            >
+                            <button className="delete-btn" onClick={() => handleDelete(story.id)}>
                                 Supprimer
                             </button>
                         </td>
@@ -91,7 +91,9 @@ export default function MyStories() {
                 ))}
                 {stories.length === 0 && !loading && (
                     <tr>
-                        <td colSpan="6" style={{ padding: "10px", textAlign: "center" }}>Aucune histoire trouvée.</td>
+                        <td colSpan="6" className="no-stories">
+                            Aucune histoire trouvée.
+                        </td>
                     </tr>
                 )}
                 </tbody>

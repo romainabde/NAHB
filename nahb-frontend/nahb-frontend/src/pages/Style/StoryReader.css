@@ -1,0 +1,78 @@
+.sr-container {
+    max-width: 95%;
+    margin: 50px auto;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #222;
+}
+
+.sr-title {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #1976d2;
+}
+
+.sr-loading {
+    font-size: 16px;
+    color: #555;
+}
+
+.sr-error-text {
+    color: #f44336;
+    font-weight: 500;
+}
+
+.sr-page {
+    margin-top: 30px;
+    text-align: left;
+    background-color: #f9f9f9;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.sr-content {
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+.sr-choices {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.sr-choice-btn {
+    padding: 8px 16px;
+    cursor: pointer;
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+}
+
+.sr-choice-btn:hover {
+    background-color: #145a9e;
+}
+
+.sr-ending {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.sr-back-btn {
+    padding: 8px 16px;
+    cursor: pointer;
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+}
+
+.sr-back-btn:hover {
+    background-color: #145a9e;
+}

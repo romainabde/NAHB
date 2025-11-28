@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
 import apiClient from "../services/apiClient";
+import "./Style/Home.css";
 
 export default function Home() {
     const { user, logout } = useContext(AuthContext);
@@ -11,20 +12,16 @@ export default function Home() {
     const [errorStories, setErrorStories] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
 
-    // Filtrer les histoires selon le searchTerm
     const filteredStories = publishedStories.filter(story =>
         story.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-
-    // fetch stories publiées
     useEffect(() => {
         const fetchPublishedStories = async () => {
             setLoadingStories(true);
             setErrorStories("");
             try {
                 const res = await apiClient.get("http://localhost:4002/reader/stories/all");
-                // filtrer uniquement celles publiées
                 const published = res.data.filter(story => story.status === "PUBLISHED");
                 setPublishedStories(published);
             } catch (err) {
@@ -34,11 +31,9 @@ export default function Home() {
                 setLoadingStories(false);
             }
         };
-
         fetchPublishedStories();
     }, []);
 
-    // handlers existants
     const handleCreateStory = () => navigate("/author/story/new");
     const handleLogout = () => {
         logout();
@@ -46,97 +41,54 @@ export default function Home() {
     };
 
     return (
-        <div style={{ maxWidth: "600px", margin: "50px auto", textAlign: "center" }}>
-            <h1>Bienvenue, {user?.username} !</h1>
+        <div className="home-container">
+            <h1 className="home-title">Bienvenue, {user?.username} !</h1>
 
-            <div style={{ marginTop: "20px" }}>
+            <div className="roles-container">
                 <strong>Vos rôles :</strong>{" "}
                 {user?.roles.map((r, i) => (
-                    <span key={i} style={{ marginRight: "10px" }}>{r.role || r}</span>
+                    <span key={i} className="role-badge">{r.role || r}</span>
                 ))}
             </div>
 
             {user?.roles.some(r => r.role === "AUTHOR" || r === "AUTHOR") && (
-                <>
-                    <div style={{ marginTop: "40px" }}>
-                        <button
-                            onClick={handleCreateStory}
-                            style={{ padding: "10px 20px", fontSize: "16px", cursor: "pointer", marginRight: "10px" }}
-                        >
-                            Créer une histoire
-                        </button>
-                    </div>
-                    <div style={{ marginTop: "20px" }}>
-                        <button
-                            onClick={() => navigate("/author/stories")}
-                            style={{ padding: "10px 20px", fontSize: "16px", cursor: "pointer" }}
-                        >
-                            Mes histoires
-                        </button>
-                    </div>
-                </>
-            )}
-
-            {user?.roles.some(r => r.role === "ADMIN" || r === "ADMIN") && (
-                <div style={{ marginTop: "20px" }}>
-                    <button
-                        onClick={() => navigate("/admin/dashboard")}
-                        style={{
-                            padding: "10px 20px",
-                            fontSize: "16px",
-                            cursor: "pointer",
-                            backgroundColor: "#1976d2",
-                            color: "white",
-                            border: "none",
-                            borderRadius: "4px"
-                        }}
-                    >
-                        Admin Dashboard
-                    </button>
+                <div className="author-buttons">
+                    <button className="btn main-btn" onClick={handleCreateStory}>Créer une histoire</button>
+                    <button className="btn main-btn" onClick={() => navigate("/author/stories")}>Mes histoires</button>
                 </div>
             )}
 
-            <div style={{ marginTop: "20px" }}>
-                <button
-                    onClick={handleLogout}
-                    style={{ padding: "8px 16px", fontSize: "14px", cursor: "pointer", backgroundColor: "#f44336", color: "white", border: "none", borderRadius: "4px" }}
-                >
-                    Déconnexion
-                </button>
+            {user?.roles.some(r => r.role === "ADMIN" || r === "ADMIN") && (
+                <div className="admin-button">
+                    <button className="btn admin-btn" onClick={() => navigate("/admin/dashboard")}>Admin Dashboard</button>
+                </div>
+            )}
+
+            <div className="logout-button">
+                <button className="btn logout-btn" onClick={handleLogout}>Déconnexion</button>
             </div>
 
-            {/* -------------------- Section Histoires publiées -------------------- */}
-            <div style={{ marginTop: "50px", textAlign: "left" }}>
+            <div className="stories-section">
                 <h2>Histoires publiées</h2>
-                <div style={{ marginBottom: "20px" }}>
+                <div className="search-container">
                     <input
                         type="text"
                         placeholder="Rechercher par titre..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        style={{
-                            width: "100%",
-                            padding: "8px",
-                            fontSize: "14px",
-                            borderRadius: "4px",
-                            border: "1px solid #ccc"
-                        }}
+                        className="search-input"
                     />
                 </div>
 
-                {loadingStories && <p>Chargement...</p>}
-                {errorStories && <p style={{ color: "red" }}>{errorStories}</p>}
-                {publishedStories.length === 0 && !loadingStories && <p>Aucune histoire publiée pour le moment.</p>}
-                <ul style={{ listStyle: "none", padding: 0 }}>
+                {loadingStories && <p className="loading-text">Chargement...</p>}
+                {errorStories && <p className="error-text">{errorStories}</p>}
+                {publishedStories.length === 0 && !loadingStories && <p className="no-stories">Aucune histoire publiée pour le moment.</p>}
+
+                <ul className="story-list">
                     {filteredStories.map(story => (
-                        <li key={story.id} style={{ marginBottom: "15px", padding: "10px", border: "1px solid #ddd", borderRadius: "5px" }}>
-                            <strong>{story.title}</strong> - {story.description}<br/>
-                            <button
-                                onClick={() => navigate(`/story/${story.id}`)}
-                                style={{ marginTop: "5px", padding: "5px 10px", cursor: "pointer" }}
-                            >
-                                Jouer
-                            </button>
+                        <li key={story.id} className="story-item">
+                            <strong>{story.title}</strong> - {story.description}
+                            <button className="btn play-btn" onClick={() => navigate(`/story/${story.id}`)}>Jouer</button>
                         </li>
                     ))}
                 </ul>

@@ -2,10 +2,11 @@ import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
 import apiClient from "../services/apiClient";
+import "./Style/StoryReader.css";
 
 export default function StoryReader() {
     const { user } = useContext(AuthContext);
-    const { id: storyId } = useParams(); // id de l'histoire
+    const { id: storyId } = useParams();
     const navigate = useNavigate();
 
     const [currentPage, setCurrentPage] = useState(null);
@@ -14,7 +15,6 @@ export default function StoryReader() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
-    // Lancer la partie au montage
     useEffect(() => {
         if (!user) return;
 
@@ -22,21 +22,18 @@ export default function StoryReader() {
             setLoading(true);
             setError("");
             try {
-                // 1️⃣ récupérer la première page
                 const resPage = await apiClient.get(
                     `http://localhost:4002/reader/stories/${storyId}/pages/first`
                 );
                 const page = resPage.data;
                 setCurrentPage(page);
 
-                // 2️⃣ créer StoryProgress
                 const resProgress = await apiClient.post("http://localhost:4003/play", {
                     storyId: Number(storyId),
                     pageId: page.id
                 });
                 setProgressId(resProgress.data.id);
 
-                // 3️⃣ récupérer les choix
                 const resChoices = await apiClient.get(
                     `http://localhost:4002/reader/stories/pages/${page.id}/choices`
                 );
@@ -52,18 +49,13 @@ export default function StoryReader() {
         startStory();
     }, [storyId, user]);
 
-    // Choisir un choix
     const chooseOption = async (toPageId) => {
         try {
-            // mettre à jour le progress
             await apiClient.patch(`http://localhost:4003/play/${progressId}`, { pageId: toPageId });
 
-            // récupérer la nouvelle page
             const resPage = await apiClient.get(`http://localhost:4002/reader/stories/pages/${toPageId}`);
-            const page = resPage.data;
-            setCurrentPage(page);
+            setCurrentPage(resPage.data);
 
-            // récupérer les choix associés
             const resChoices = await apiClient.get(`http://localhost:4002/reader/stories/pages/${toPageId}/choices`);
             setChoices(resChoices.data);
         } catch (err) {
@@ -73,36 +65,33 @@ export default function StoryReader() {
     };
 
     if (!user) {
-        return <p>Veuillez vous connecter pour jouer à cette histoire.</p>;
+        return <p className="sr-error-text">Veuillez vous connecter pour jouer à cette histoire.</p>;
     }
 
     return (
-        <div style={{ maxWidth: "600px", margin: "50px auto", textAlign: "center" }}>
-            <h2>Lecture de l'histoire</h2>
-            {loading && <p>Chargement...</p>}
-            {error && <p style={{ color: "red" }}>{error}</p>}
+        <div className="sr-container">
+            <h2 className="sr-title">Lecture de l'histoire</h2>
+            {loading && <p className="sr-loading">Chargement...</p>}
+            {error && <p className="sr-error-text">{error}</p>}
 
             {currentPage && (
-                <div style={{ marginTop: "30px", textAlign: "left" }}>
-                    <p>{currentPage.content}</p>
+                <div className="sr-page">
+                    <p className="sr-content">{currentPage.content}</p>
 
                     {currentPage.isEnding ? (
-                        <div style={{ marginTop: "20px", textAlign: "center" }}>
+                        <div className="sr-ending">
                             <p>🎉 Fin de l'histoire !</p>
-                            <button
-                                onClick={() => navigate("/")}
-                                style={{ padding: "8px 16px", cursor: "pointer" }}
-                            >
+                            <button className="sr-back-btn" onClick={() => navigate("/")}>
                                 Retour à l'accueil
                             </button>
                         </div>
                     ) : (
-                        <div style={{ marginTop: "20px" }}>
+                        <div className="sr-choices">
                             {choices.map((choice) => (
                                 <button
                                     key={choice.id}
+                                    className="sr-choice-btn"
                                     onClick={() => chooseOption(choice.toPageId)}
-                                    style={{ marginRight: "10px", marginTop: "10px", padding: "5px 10px", cursor: "pointer" }}
                                 >
                                     {choice.text}
                                 </button>
