@@ -4,5 +4,8 @@ const router = express.Router();
 
 router.get("/stories/:id", playController.getUserStoryProgress);
 router.post("/", playController.saveProgress);
+router.patch("/:id", playController.updateProgress);
+
+router.get("/stats", playController.getStoryStats);
 
 module.exports = router;

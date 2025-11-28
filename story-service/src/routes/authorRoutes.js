@@ -14,6 +14,4 @@ router.delete("/:id", authorController.deleteStory);
 router.delete("/pages/:id", authorController.deletePage);
 router.delete("/choices/:id", authorController.deleteChoice);
 
-
-
 module.exports = router;

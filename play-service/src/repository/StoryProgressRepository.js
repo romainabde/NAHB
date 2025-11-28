@@ -14,6 +14,25 @@ class StoryProgressRepository {
             orderBy: { updatedAt: 'desc' }
         });
     }
+
+    async findAll(){
+        return prisma.storyProgress.findMany({
+            orderBy: { createdAt: 'desc' }
+        });
+    }
+
+    async findById(id){
+        return prisma.storyProgress.findUnique({
+            where: { id }
+        })
+    }
+
+    async update(id, pageId) {
+        return prisma.storyProgress.update({
+            where: { id },
+            data: { pageId }
+        });
+    }
 }
 
 module.exports = new StoryProgressRepository();

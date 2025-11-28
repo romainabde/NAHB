@@ -18,3 +18,18 @@ model StoryProgress {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model StoryPlay {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  storyId   Int
+  createdAt DateTime @default(now())
+}
+
+model EndingReach {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  storyId   Int
+  pageId    Int      // page finale atteinte
+  reachedAt DateTime @default(now())
+}
