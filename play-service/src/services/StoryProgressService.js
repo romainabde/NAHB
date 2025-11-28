@@ -40,6 +40,10 @@ class StoryProgressService {
         return storyProgress;
     }
 
+    async getStoryProgress(){
+        return await StoryProgressRepository.findAll();
+    }
+
     async getStoryStats() {
         const stories = await StoryProgressRepository.findAll();
 

@@ -9,6 +9,13 @@ export default function Home() {
     const [publishedStories, setPublishedStories] = useState([]);
     const [loadingStories, setLoadingStories] = useState(false);
     const [errorStories, setErrorStories] = useState("");
+    const [searchTerm, setSearchTerm] = useState("");
+
+    // Filtrer les histoires selon le searchTerm
+    const filteredStories = publishedStories.filter(story =>
+        story.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
 
     // fetch stories publiées
     useEffect(() => {
@@ -70,6 +77,25 @@ export default function Home() {
                 </>
             )}
 
+            {user?.roles.some(r => r.role === "ADMIN" || r === "ADMIN") && (
+                <div style={{ marginTop: "20px" }}>
+                    <button
+                        onClick={() => navigate("/admin/dashboard")}
+                        style={{
+                            padding: "10px 20px",
+                            fontSize: "16px",
+                            cursor: "pointer",
+                            backgroundColor: "#1976d2",
+                            color: "white",
+                            border: "none",
+                            borderRadius: "4px"
+                        }}
+                    >
+                        Admin Dashboard
+                    </button>
+                </div>
+            )}
+
             <div style={{ marginTop: "20px" }}>
                 <button
                     onClick={handleLogout}
@@ -82,11 +108,27 @@ export default function Home() {
             {/* -------------------- Section Histoires publiées -------------------- */}
             <div style={{ marginTop: "50px", textAlign: "left" }}>
                 <h2>Histoires publiées</h2>
+                <div style={{ marginBottom: "20px" }}>
+                    <input
+                        type="text"
+                        placeholder="Rechercher par titre..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        style={{
+                            width: "100%",
+                            padding: "8px",
+                            fontSize: "14px",
+                            borderRadius: "4px",
+                            border: "1px solid #ccc"
+                        }}
+                    />
+                </div>
+
                 {loadingStories && <p>Chargement...</p>}
                 {errorStories && <p style={{ color: "red" }}>{errorStories}</p>}
                 {publishedStories.length === 0 && !loadingStories && <p>Aucune histoire publiée pour le moment.</p>}
                 <ul style={{ listStyle: "none", padding: 0 }}>
-                    {publishedStories.map(story => (
+                    {filteredStories.map(story => (
                         <li key={story.id} style={{ marginBottom: "15px", padding: "10px", border: "1px solid #ddd", borderRadius: "5px" }}>
                             <strong>{story.title}</strong> - {story.description}<br/>
                             <button

@@ -35,7 +35,7 @@ function App() {
 
                   {/* Pages protégées (pour l’instant on ne bloque pas) */}
                   <Route path="/author" element={<AuthorDashboard />} />
-                  <Route path="/admin" element={<AdminDashboard />} />
+                  <Route path="/admin/dashboard" element={<AdminDashboard />} />
 
               </Routes>
           </BrowserRouter>

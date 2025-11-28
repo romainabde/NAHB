@@ -28,6 +28,15 @@ exports.getUserStoryProgress = async (req, res, next) => {
     }
 };
 
+exports.getStoryProgress = async (req, res, next) => {
+    try {
+        const response = await storyProgress.getStoryProgress()
+        return res.status(200).json(response)
+    } catch (err) {
+        next(err);
+    }
+};
+
 exports.getStoryStats = async (req, res, next) => {
     try {
         const stats = await storyProgress.getStoryStats();
