@@ -7,15 +7,21 @@ export default function AdminDashboard() {
     const navigate = useNavigate();
 
     const [plays, setPlays] = useState([]);
+    const [endedPlays, setEndedPlays] = useState([]); // 👈 AJOUT
     const [users, setUsers] = useState([]);
     const [stories, setStories] = useState([]);
+
     const [loadingPlays, setLoadingPlays] = useState(true);
+    const [loadingEnded, setLoadingEnded] = useState(true); // 👈 AJOUT
     const [loadingUsers, setLoadingUsers] = useState(true);
     const [loadingStories, setLoadingStories] = useState(true);
+
     const [errorPlays, setErrorPlays] = useState("");
+    const [errorEnded, setErrorEnded] = useState(""); // 👈 AJOUT
     const [errorUsers, setErrorUsers] = useState("");
     const [errorStories, setErrorStories] = useState("");
 
+    // Fetch parties jouées
     useEffect(() => {
         const fetchPlays = async () => {
             setLoadingPlays(true);
@@ -32,6 +38,24 @@ export default function AdminDashboard() {
         fetchPlays();
     }, []);
 
+    // 👇 Fetch parties terminées
+    useEffect(() => {
+        const fetchEndedPlays = async () => {
+            setLoadingEnded(true);
+            setErrorEnded("");
+            try {
+                const res = await apiClient.get("http://localhost:4003/play/ended");
+                setEndedPlays(res.data);
+            } catch (err) {
+                setErrorEnded(err.response?.data?.error || "Erreur lors de la récupération des parties terminées.");
+            } finally {
+                setLoadingEnded(false);
+            }
+        };
+        fetchEndedPlays();
+    }, []);
+
+    // Users
     useEffect(() => {
         const fetchUsers = async () => {
             setLoadingUsers(true);
@@ -48,6 +72,7 @@ export default function AdminDashboard() {
         fetchUsers();
     }, []);
 
+    // Stories
     useEffect(() => {
         const fetchStories = async () => {
             setLoadingStories(true);
@@ -99,11 +124,21 @@ export default function AdminDashboard() {
 
             <section className="admin-section">
                 <h2>Statistiques</h2>
+
                 {loadingPlays && <p>Chargement...</p>}
                 {errorPlays && <p className="admin-error">{errorPlays}</p>}
-                {!loadingPlays && !errorPlays && <p>Total de parties jouées : <strong>{plays.length}</strong></p>}
+                {!loadingPlays && !errorPlays && (
+                    <p>Total de parties jouées : <strong>{plays.length}</strong></p>
+                )}
+
+                {loadingEnded && <p>Chargement...</p>}
+                {errorEnded && <p className="admin-error">{errorEnded}</p>}
+                {!loadingEnded && !errorEnded && (
+                    <p>Total de parties terminées : <strong>{endedPlays.length}</strong></p>
+                )}
             </section>
 
+            {/* Users */}
             <section className="admin-section">
                 <h2>Gérer les utilisateurs (Bannir)</h2>
                 {loadingUsers && <p>Chargement...</p>}
@@ -138,6 +173,7 @@ export default function AdminDashboard() {
                 )}
             </section>
 
+            {/* Stories */}
             <section className="admin-section">
                 <h2>Suspendre des histoires</h2>
                 {loadingStories && <p>Chargement...</p>}

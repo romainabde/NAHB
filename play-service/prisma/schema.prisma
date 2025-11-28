@@ -19,13 +19,6 @@ model StoryProgress {
   updatedAt DateTime @updatedAt
 }
 
-model StoryPlay {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  storyId   Int
-  createdAt DateTime @default(now())
-}
-
 model EndingReach {
   id        Int      @id @default(autoincrement())
   userId    Int

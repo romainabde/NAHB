@@ -33,6 +33,16 @@ class StoryProgressRepository {
             data: { pageId }
         });
     }
+
+    async endParty(userId, storyId, pageId){
+        return prisma.endingReach.create({
+            data: {userId, storyId, pageId }
+        })
+    }
+
+    async getFinishParty(){
+        return prisma.endingReach.findMany();
+    }
 }
 
 module.exports = new StoryProgressRepository();

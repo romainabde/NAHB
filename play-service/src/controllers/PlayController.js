@@ -45,3 +45,21 @@ exports.getStoryStats = async (req, res, next) => {
         next(err);
     }
 };
+
+exports.playEnd = async (req, res, next) => {
+    try {
+        const resp = await playService.end(req.user.id, req.body.storyId, req.body.pageId);
+        return res.status(200).json(resp);
+    } catch (err) {
+        next(err);
+    }
+};
+
+exports.getFinishParty = async (req, res, next) => {
+    try {
+        const resp = await playService.getFinishParty();
+        return res.status(200).json(resp);
+    } catch (err) {
+        next(err);
+    }
+};

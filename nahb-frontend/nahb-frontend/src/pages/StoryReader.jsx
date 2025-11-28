@@ -54,9 +54,25 @@ export default function StoryReader() {
             await apiClient.patch(`http://localhost:4003/play/${progressId}`, { pageId: toPageId });
 
             const resPage = await apiClient.get(`http://localhost:4002/reader/stories/pages/${toPageId}`);
-            setCurrentPage(resPage.data);
+            const page = resPage.data;
+            setCurrentPage(page);
 
-            const resChoices = await apiClient.get(`http://localhost:4002/reader/stories/pages/${toPageId}/choices`);
+            // 👉 SI C'EST UNE PAGE DE FIN → enregistrer automatiquement
+            if (page.isEnding) {
+                try {
+                    await apiClient.post("http://localhost:4003/play/end", {
+                        storyId: Number(storyId),
+                        pageId: page.id
+                    });
+                    console.log("Fin de partie enregistrée !");
+                } catch (err) {
+                    console.error("Erreur lors de l'enregistrement de la fin :", err);
+                }
+            }
+
+            const resChoices = await apiClient.get(
+                `http://localhost:4002/reader/stories/pages/${toPageId}/choices`
+            );
             setChoices(resChoices.data);
         } catch (err) {
             const message = err.response?.data?.error || "Erreur lors du choix de la page.";
